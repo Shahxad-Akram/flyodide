@@ -1,5 +1,4 @@
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+library;
+
+export 'package:flyodide/src/flyodide_controller.dart';
+export 'package:webview_flutter_plus/webview_flutter_plus.dart';

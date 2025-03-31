@@ -1,0 +1,2 @@
+/home/shahzad/Projects/Public/flyodide/example/android/app/.cxx/Debug/3w6t2p65/x86/CMakeFiles/edit_cache.dir
+/home/shahzad/Projects/Public/flyodide/example/android/app/.cxx/Debug/3w6t2p65/x86/CMakeFiles/rebuild_cache.dir
