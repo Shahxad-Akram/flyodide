@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_highlight/themes/atelier-seaside-light.dart';
 import 'package:flutter_highlight/themes/monokai.dart';
@@ -11,16 +12,16 @@ class PyCodeEditor extends StatelessWidget {
     _codeLineEditorController.text = intCode;
   }
 
-  final List<CodePrompt> _directPrompts = [];
+  // final List<CodePrompt> _directPrompts = [];
 
   final FlyodideController pyCodeController;
 
   final CodeLineEditingController _codeLineEditorController =
       CodeLineEditingController();
 
-  final Map<String, List<CodePrompt>> _relatedPrompts = {};
+  // final Map<String, List<CodePrompt>> _relatedPrompts = {};
 
-  String intCode = """
+  final String intCode = """
 import numpy as np
 aa = np.random.rand(3,2,3)
 aa
@@ -79,7 +80,9 @@ aa
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: ListenableBuilder(
         builder: (context, child) {
-          print("isPyodideLoaded: ${pyCodeController.isPyodideLoaded}");
+          if (kDebugMode) {
+            print("isPyodideLoaded: ${pyCodeController.isPyodideLoaded}");
+          }
           return pyCodeController.isPyodideLoaded
               ? child!
               : CircularProgressIndicator();

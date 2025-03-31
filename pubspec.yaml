@@ -1,7 +1,7 @@
 name: flyodide
 description: "A Flutter wrapper around Pyodide to execute Python in a Flutter app."
 version: 0.0.1
-homepage:
+homepage: https://github.com/Shahxad-Akram/flyodide
 
 environment:
   sdk: ^3.6.0

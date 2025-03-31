@@ -81,21 +81,6 @@ class FlyodideController extends ChangeNotifier {
     if (kDebugMode) print('FlyodideControllerMessage: $debugMessage');
   }
 
-  List parseNumpyReturn(dynamic numpyReturn) {
-    List result = [];
-
-    if (numpyReturn is String) {
-      return json.decode(numpyReturn);
-    } else if (numpyReturn is List) {
-      return numpyReturn;
-    } else if (numpyReturn is Map) {
-      return numpyReturn.entries
-          .map((entry) => '${entry.key}: ${entry.value}')
-          .toList();
-    }
-    return [];
-  }
-
   Future<void> executePythonCode(String pythonCode) async {
     return await webViewControllerPlus
         .runJavaScript("executePythonCode(`$pythonCode`);");
