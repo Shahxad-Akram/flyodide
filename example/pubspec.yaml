@@ -15,12 +15,9 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-
+  flutter_code_editor: ^0.3.3
+  highlight: ^0.7.0
   flutter_highlight: ^0.7.0
-  path_provider: ^2.1.5
-  collection: ^1.19.1
-  re_editor: ^0.7.0
-  re_highlight: ^0.0.3
   flyodide:
     path: ../
 
@@ -28,8 +25,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-
   flutter_lints: ^5.0.0
 
 

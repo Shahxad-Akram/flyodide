@@ -1,82 +1,53 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_highlight/themes/atelier-seaside-light.dart';
-import 'package:flutter_highlight/themes/monokai.dart';
+import 'package:flutter_code_editor/flutter_code_editor.dart';
+import 'package:flutter_highlight/themes/monokai-sublime.dart';
 import 'package:flyodide/flyodide.dart';
-import 'package:flyodide_example/default_code_autocomplete_listview.dart';
-import 'package:re_editor/re_editor.dart';
-import 'package:re_highlight/languages/python.dart';
+import 'package:highlight/languages/python.dart';
 
 class PyCodeEditor extends StatelessWidget {
-  PyCodeEditor({super.key, required this.pyCodeController}) {
-    _codeLineEditorController.text = intCode;
-  }
+  PyCodeEditor({super.key, required this.pyCodeController});
 
   // final List<CodePrompt> _directPrompts = [];
 
   final FlyodideController pyCodeController;
 
-  final CodeLineEditingController _codeLineEditorController =
-      CodeLineEditingController();
+  final controller = CodeController(
+    text: """
+import numpy as np
+aa = np.random.rand(3)
+aa
+
+import pandas as pd
+
+data = {
+  "calories": [420, 380, 390],
+  "duration": [50, 40, 45]
+}
+
+#load data into a DataFrame object:
+df = pd.DataFrame(data)
+
+sd =df.to_dict()
+sd
+
+""", // Initial code
+    language: python,
+  );
 
   // final Map<String, List<CodePrompt>> _relatedPrompts = {};
-
-  final String intCode = """
-import numpy as np
-aa = np.random.rand(3,2,3)
-aa
-""";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CodeAutocomplete(
-          viewBuilder: (context, notifier, onSelected) {
-            return DefaultCodeAutocompleteListView(
-              notifier: notifier,
-              onSelected: onSelected,
-            );
-          },
-          promptsBuilder: DefaultCodeAutocompletePromptsBuilder(
-            language: langPython,
-            // directPrompts: _directPrompts,
-            // relatedPrompts: _relatedPrompts,
+      body: CodeTheme(
+        data: CodeThemeData(styles: monokaiSublimeTheme),
+        child: SingleChildScrollView(
+          child: CodeField(
+            controller: controller,
           ),
-          child: CodeEditor(
-            style: CodeEditorStyle(
-              backgroundColor:
-                  atelierSeasideLightTheme['root']!.backgroundColor,
-              fontSize: 18,
-              codeTheme: CodeHighlightTheme(languages: {
-                'python': CodeHighlightThemeMode(
-                  mode: langPython,
-                )
-              }, theme: monokaiTheme),
-            ),
-
-            controller: _codeLineEditorController,
-            wordWrap: false,
-            indicatorBuilder:
-                (context, editingController, chunkController, notifier) {
-              return Row(
-                children: [
-                  DefaultCodeLineNumber(
-                    controller: editingController,
-                    notifier: notifier,
-                  ),
-                  DefaultCodeChunkIndicator(
-                      width: 20,
-                      controller: chunkController,
-                      notifier: notifier)
-                ],
-              );
-            },
-            // findBuilder: (context, controller, readOnly) =>
-            //     CodeFindPanelView(controller: controller, readOnly: readOnly),
-            toolbarController: const ContextMenuControllerImpl(),
-            sperator: Container(width: 1, color: Colors.blueGrey),
-            autocompleteSymbols: true,
-          )),
+        ),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: ListenableBuilder(
         builder: (context, child) {
@@ -90,8 +61,7 @@ aa
         listenable: pyCodeController,
         child: FloatingActionButton(
           onPressed: () async {
-            await pyCodeController
-                .executePythonCode(_codeLineEditorController.text);
+            await pyCodeController.executePythonCode(controller.text);
             pyCodeController.pythonOutput = "";
             pyCodeController.pythonError = "";
           },
@@ -112,47 +82,4 @@ class ContextMenuItemWidget extends PopupMenuItem<void>
 
   @override
   Size get preferredSize => const Size(150, 25);
-}
-
-class ContextMenuControllerImpl implements SelectionToolbarController {
-  const ContextMenuControllerImpl();
-
-  @override
-  void hide(BuildContext context) {}
-
-  @override
-  void show({
-    required BuildContext context,
-    required CodeLineEditingController controller,
-    required TextSelectionToolbarAnchors anchors,
-    Rect? renderRect,
-    required LayerLink layerLink,
-    required ValueNotifier<bool> visibility,
-  }) {
-    showMenu(
-        context: context,
-        position: RelativeRect.fromSize(
-            anchors.primaryAnchor & const Size(150, double.infinity),
-            MediaQuery.of(context).size),
-        items: [
-          ContextMenuItemWidget(
-            text: 'Cut',
-            onTap: () {
-              controller.cut();
-            },
-          ),
-          ContextMenuItemWidget(
-            text: 'Copy',
-            onTap: () {
-              controller.copy();
-            },
-          ),
-          ContextMenuItemWidget(
-            text: 'Paste',
-            onTap: () {
-              controller.paste();
-            },
-          ),
-        ]);
-  }
 }

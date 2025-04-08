@@ -1,12 +1,12 @@
 import { loadPyodide, PyodideInterface } from 'pyodide';
 
 let pyodide: PyodideInterface;
+let executingCode: boolean = false;
 
 async function initPyodide(indexURL: string) {
     try {
         pyodide = await loadPyodide({
             indexURL: indexURL,
-            packages: ["numpy"],
             stdout: (std_out: any) => {
                 channelMessageHandler((window as any).PythonOutputCallback, std_out);
             },
@@ -19,11 +19,18 @@ async function initPyodide(indexURL: string) {
 
 async function executePythonCode(code: string) {
     try {
+        if (executingCode) {
+            return;
+        }
+        executingCode = true;
         await pyodide.loadPackagesFromImports(code);
         var codeReturn = await pyodide.runPythonAsync(code);
         if (codeReturn !== undefined) {
-            channelMessageHandler((window as any).PythonReturnCallback, JSON.stringify(codeReturn.toJs()));
+
+            channelMessageHandler((window as any).PythonReturnCallback,
+                JSON.stringify(codeReturn.toJs()));
         }
+        executingCode = false;
     } catch (e) {
         const pyError = pyodide.runPython(`
             from traceback import format_exception
@@ -33,6 +40,7 @@ async function executePythonCode(code: string) {
             )
         `);
         channelMessageHandler((window as any).PythonErrorCallback, pyError);
+        executingCode = false;
     }
 }
 

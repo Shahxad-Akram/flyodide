@@ -3,6 +3,7 @@ import 'package:flyodide/flyodide.dart';
 import 'package:flyodide_example/code_editor.dart';
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const PyCodeApp());
 }
@@ -32,13 +33,13 @@ class MainPage extends StatelessWidget {
           future: FlyodideController().initController(),
           builder: (_, snap) {
             if (snap.hasData && !snap.hasError) {
-              final pyCodeController = snap.data!;
+              final flyodideController = snap.data!;
               return Column(
                 children: <Widget>[
                   SizedBox(
                     height: 500,
                     child: PyCodeEditor(
-                      pyCodeController: pyCodeController,
+                      pyCodeController: flyodideController,
                     ),
                   ),
                   SizedBox(
@@ -47,18 +48,18 @@ class MainPage extends StatelessWidget {
                       padding: EdgeInsets.all(8.0),
                       child: SingleChildScrollView(
                         child: ListenableBuilder(
-                          listenable: pyCodeController,
+                          listenable: flyodideController,
                           builder: (context, child) {
                             return RichText(
                               text: TextSpan(
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text: pyCodeController.pythonOutput,
+                                    text: flyodideController.pythonOutput,
                                     style: const TextStyle(
                                         fontSize: 15, color: Colors.black),
                                   ),
                                   TextSpan(
-                                    text: pyCodeController.pythonError,
+                                    text: flyodideController.pythonError,
                                     style: const TextStyle(
                                         fontSize: 14, color: Colors.red),
                                   ),

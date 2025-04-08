@@ -7,17 +7,16 @@ import 'package:webview_flutter_plus/webview_flutter_plus.dart';
 class FlyodideController extends ChangeNotifier {
   final webViewControllerPlus = WebViewControllerPlus();
   final localHostServer = LocalhostServer();
-  final String pyodideIndexUrl;
 
-  bool isPyodideLoaded = false;
   String pythonOutput = '';
-  dynamic pythonReturn;
   String pythonError = '';
   String pyodideLoadStatus = 'Loading Pyodide...';
+  bool isPyodideLoaded = false;
 
-  FlyodideController(
-      {this.pyodideIndexUrl =
-          "https://cdn.jsdelivr.net/pyodide/v0.27.4/full/"}) {
+  String? pyodideIndexUrl;
+  dynamic pythonReturn;
+
+  FlyodideController() {
     webViewControllerPlus
       ..addJavaScriptChannel(
         'PyodideLoadedCallback',
@@ -78,19 +77,27 @@ class FlyodideController extends ChangeNotifier {
   }
 
   void _controllerDebugPrint(String debugMessage) {
-    if (kDebugMode) print('FlyodideControllerMessage: $debugMessage');
+    if (kDebugMode) print('FlyodideConsoleMessage: $debugMessage');
+  }
+
+  Future<FlyodideController> initController(
+      {String pyodideIndexUrl =
+          'https://cdn.jsdelivr.net/pyodide/v0.27.5/full/',
+      int serverPort = 0}) async {
+    await localHostServer.start(port: serverPort);
+
+    this.pyodideIndexUrl = Uri.parse(pyodideIndexUrl).isAbsolute
+        ? pyodideIndexUrl
+        : 'http://localhost:${localHostServer.port}/$pyodideIndexUrl';
+
+    await webViewControllerPlus.loadFlutterAssetWithServer(
+        'packages/flyodide/core/index.html', localHostServer.port!);
+    return this;
   }
 
   Future<void> executePythonCode(String pythonCode) async {
     return await webViewControllerPlus
-        .runJavaScript("executePythonCode(`$pythonCode`);");
-  }
-
-  Future<FlyodideController> initController({serverPort = 0}) async {
-    await localHostServer.start(port: serverPort);
-    await webViewControllerPlus.loadFlutterAssetWithServer(
-        'packages/flyodide/core/index.html', localHostServer.port!);
-    return this;
+        .runJavaScript('executePythonCode(`$pythonCode`);');
   }
 
   Future<void> closeController() async {
