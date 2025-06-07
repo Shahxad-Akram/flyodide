@@ -6,9 +6,10 @@ const path = require('path');
 
 module.exports = {
   mode: 'development',
-  entry: './src/index.ts',
+  entry: './src/flyodide.ts',
   plugins: [new PyodidePlugin(), new HtmlWebpackPlugin({
-    template: './src/index.html',
+    template: './src/flyodide.html',
+    filename: 'flyodide.html',
   }),],
   module: {
     rules: [
@@ -29,7 +30,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, '../lib/core/'),
-    filename: 'main.js',
+    filename: 'flyodide.js',
   },
   devServer: {
     static: '../lib/core/',

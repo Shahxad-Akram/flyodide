@@ -10,7 +10,7 @@ class PyCodeEditor extends StatelessWidget {
 
   // final List<CodePrompt> _directPrompts = [];
 
-  final FlyodideController pyCodeController;
+  final FlyodideControllerPlatform pyCodeController;
 
   final controller = CodeController(
     text: """

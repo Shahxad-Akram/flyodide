@@ -4,9 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter_plus/webview_flutter_plus.dart';
 
-class FlyodideController extends ChangeNotifier {
+class FlyodideControllerPlatform extends ChangeNotifier {
   final webViewControllerPlus = WebViewControllerPlus();
-  final localHostServer = LocalhostServer();
 
   String pythonOutput = '';
   String pythonError = '';
@@ -16,7 +15,7 @@ class FlyodideController extends ChangeNotifier {
   String? pyodideIndexUrl;
   dynamic pythonReturn;
 
-  FlyodideController() {
+  FlyodideControllerPlatform() {
     webViewControllerPlus
       ..addJavaScriptChannel(
         'PyodideLoadedCallback',
@@ -80,18 +79,33 @@ class FlyodideController extends ChangeNotifier {
     if (kDebugMode) print('FlyodideConsoleMessage: $debugMessage');
   }
 
-  Future<FlyodideController> initController(
+  // Future<List> jediCodeCompletion(String source, int line, int column) async {
+  //   final jediPrompt =
+  //       "[[c.name, c.type] for c in jedi.Script('''$source''').complete($line, $column)]";
+
+  //   var codeCompletions = json.decode(
+  //       (await webViewController.runJavaScriptReturningResult(
+  //               "autoCompleteWithJedi(${jsonEncode(jediPrompt.replaceAll("\"", "\\\""))});"))
+  //           .toString());
+
+  //   notifyListeners();
+  //   return codeCompletions;
+  // }
+
+  Future<FlyodideControllerPlatform> initController(
       {String pyodideIndexUrl =
           'https://cdn.jsdelivr.net/pyodide/v0.27.5/full/',
       int serverPort = 0}) async {
-    await localHostServer.start(port: serverPort);
-
     this.pyodideIndexUrl = Uri.parse(pyodideIndexUrl).isAbsolute
         ? pyodideIndexUrl
-        : 'http://localhost:${localHostServer.port}/$pyodideIndexUrl';
+        : pyodideIndexUrl;
 
-    await webViewControllerPlus.loadFlutterAssetWithServer(
-        'packages/flyodide/core/index.html', localHostServer.port!);
+    // await webViewControllerPlus.loadFlutterAssetWithServer(
+    //     'packages/flyodide/core/flyodide.html', localHostServer.port!);
+
+    await webViewControllerPlus
+        .loadFlutterAsset('packages/flyodide/core/flyodide.html');
+
     return this;
   }
 
@@ -100,7 +114,7 @@ class FlyodideController extends ChangeNotifier {
         .runJavaScript('executePythonCode(`$pythonCode`);');
   }
 
-  Future<void> closeController() async {
-    return await localHostServer.close();
-  }
+  // Future<void> closeController() async {
+  //   return await localHostServer.close();
+  // }
 }

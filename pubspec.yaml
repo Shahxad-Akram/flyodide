@@ -10,8 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  webview_flutter_plus: ^0.4.15
-
+  webview_flutter_plus: ^0.4.19
+  web: ^1.1.1
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -19,8 +20,8 @@ dev_dependencies:
 
 flutter:
   assets:
-    - packages/flyodide/core/main.js
-    - packages/flyodide/core/index.html
+    - packages/flyodide/core/flyodide.js
+    - packages/flyodide/core/flyodide.html
     - packages/flyodide/core/pyodide/package.json
     - packages/flyodide/core/pyodide/pyodide.asm.js
     - packages/flyodide/core/pyodide/pyodide.asm.wasm

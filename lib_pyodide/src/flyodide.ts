@@ -44,6 +44,9 @@ async function executePythonCode(code: string) {
     }
 }
 
+// function autoCompleteWithJedi(source: string): any[] {
+//     return pyodide.runPython(source).toJs();
+// }
 
 function channelMessageHandler(channel: any, message: any) {
     if (channel) {

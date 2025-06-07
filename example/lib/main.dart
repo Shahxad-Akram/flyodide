@@ -3,8 +3,6 @@ import 'package:flyodide/flyodide.dart';
 import 'package:flyodide_example/code_editor.dart';
 
 void main() async {
-
-  WidgetsFlutterBinding.ensureInitialized();
   runApp(const PyCodeApp());
 }
 
@@ -29,8 +27,8 @@ class MainPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Python Code Editor'),
       ),
-      body: FutureBuilder<FlyodideController>(
-          future: FlyodideController().initController(),
+      body: FutureBuilder<FlyodideControllerPlatform>(
+          future: FlyodideControllerPlatform().initController(),
           builder: (_, snap) {
             if (snap.hasData && !snap.hasError) {
               final flyodideController = snap.data!;
